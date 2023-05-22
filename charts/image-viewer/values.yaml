@@ -1,0 +1,133 @@
+# Default values for image-viewer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+image:
+  repository: alirionx/image-viewer
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+# If you wish to create pull secrets via helm deployment (less secure...)
+createImagePullSecrets: [] 
+# createImagePullSecrets: 
+#   - name: NAME
+#     base64: generate via e.g. => "base64 ~/.docker/config.json"
+
+nameOverride: ""
+fullnameOverride: ""
+
+
+#-MYAREA-----------------------------------------------------------
+
+# Possible values are "microservices" or "standalone"
+stackMode: microservices
+
+# Possible values are "filesystem" or "mongodb"
+dataBackend: mongodb
+
+backend:
+  # Deploy mongoDb as StatefulSet within the stack
+  docDatabase: 
+    include: yes
+    customStorageClass:
+      use: no 
+      # className: fast-storage
+    # volumeSize: 1Gi
+    # name: data-backend
+    # image: mongo
+    # mongodbConnectionString: mongodb://backend-mongodb:27017/
+
+  # Deploy rabbitMq as StatefulSet within the stack
+  messageBus: 
+    include: yes
+    # name: message-bus
+    # image: rabbitmq:3-management
+    # rabbitMqHost: message-bus
+    # rabbitMqUser: rabbitmq
+    # rabbitMqPassword: rabbitmq
+
+  apiDeployment:
+    # name: api-deployment
+    imagePullSecrets: []
+    # imagePullSecrets: 
+    #   - name: NAME
+    replicaCount: 3 # => If stackMode = "standalone", replicaCount will forced to 1
+    envs: {} # => Additional custom envs
+
+  workerDeployment: # => If stackMode = "standalone", this becomes irrelevant
+    # name: worker-deployment
+    imagePullSecrets: []
+    # imagePullSecrets: 
+    #   - name: NAME
+    replicaCount: 3 
+    envs: {} # => Additional custom envs
+
+services:
+  backendApi:
+    # name: backend-api
+    port: 5000
+    # type: ClusterIP
+  docDatabase:
+    # name: backend-mongodb
+    port: 27017
+    # type: ClusterIP
+  messageBus:
+    # name: backend-message-bus
+    port: 5672
+    # type: ClusterIP
+
+
+#------------------------------------------------------------------
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+ingress:
+  # name: "image-viewer-ingress"
+  enabled: false
+  hostname: image-viewer.local
+  annotations: 
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+    # nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    nginx.ingress.kubernetes.io/proxy-body-size: "512m"
+  tls: 
+    enabled: no
+    # secretName: chart-example-tls
+
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -1,0 +1,47 @@
+{{- if and (.Values.backend.docDatabase.include) (eq .Values.stackMode "microservices") -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-ss
+  labels:
+    {{- include "image-viewer.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: mongodb-ss
+  serviceName: {{ .Values.services.docDatabase.name | default "data-backend" }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb-ss
+    spec:
+      serviceAccountName: {{ include "image-viewer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: mongodb
+        image: {{ .Values.services.docDatabase.image | default "mongo" }}
+        ports: 
+        - containerPort: 27017
+          name: mongodb
+        volumeMounts:
+        - name: db-data
+          mountPath: /data/db
+        # resources:
+        #   limits:
+        #     memory: "1Gi"
+        #     cpu: "500m"
+  volumeClaimTemplates:
+  - metadata:
+      name: db-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{ if .Values.backend.docDatabase.customStorageClass.use }}
+      storageClassName: {{ .Values.backend.docDatabase.customStorageClass.className | default "default" }} 
+      {{ end }}
+      resources:
+        requests:
+          storage: {{ .Values.backend.docDatabase.volumeSize | default "1Gi" }} 
+
+{{- end }}

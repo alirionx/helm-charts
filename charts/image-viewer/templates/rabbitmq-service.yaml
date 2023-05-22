@@ -1,0 +1,22 @@
+{{- if and (.Values.backend.messageBus.include) (eq .Values.stackMode "microservices") -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.services.messageBus.name | default "message-bus" }}
+  labels:
+    {{- include "image-viewer.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: rabbitmq-ss
+  ports:
+  - port: {{ .Values.services.messageBus.port }}
+    targetPort: 5672
+    protocol: TCP
+    name: rabbitmq
+  - port: 15672
+    targetPort: 15672
+    protocol: TCP
+    name: webui
+  type: {{ .Values.services.messageBus.type | default "ClusterIP" }}
+
+{{- end }}

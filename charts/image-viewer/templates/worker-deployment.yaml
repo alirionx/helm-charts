@@ -1,0 +1,72 @@
+{{- if eq .Values.stackMode "microservices" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backend.workerDeployment.name | default "worker-deployment" }}
+  labels:
+    {{- include "image-viewer.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.backend.workerDeployment.replicaCount | default 3 }}
+  selector:
+    matchLabels:
+      app: {{ .Values.backend.workerDeployment.name | default "worker-deployment" }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.backend.workerDeployment.name | default "worker-deployment" }}
+    spec:
+      {{- with .Values.backend.workerDeployment.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "image-viewer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          env:
+            - name: MODE
+              value: worker
+            - name: DATA_BACKEND
+              value: {{ .Values.dataBackend }}
+            - name: STACK_MODE
+              value: {{ .Values.stackMode }}
+          {{- if eq .Values.dataBackend "mongodb" }}
+            - name: MONGODB_CONSTR
+              value: {{ .Values.backend.docDatabase.mongodbConnectionString | default "mongodb://data-backend:27017/" }}
+          {{- end }}
+          {{- if .Values.backend.messageBus.include }}
+            - name: RABBITMQ_HOST
+              value: {{ .Values.backend.messageBus.rabbitMqHost | default "message-bus" }}
+            - name: RABBITMQ_USERNAME
+              value: {{ .Values.backend.messageBus.rabbitMqUser | default "rabbitmq" }}
+            - name: RABBITMQ_PASSWORD
+              value: {{ .Values.backend.messageBus.rabbitMqPassword | default "rabbitmq" }}
+          {{- end }}
+
+          {{- range $k, $v := .Values.backend.workerDeployment.envs }}
+            - name: {{ $k }}
+              value: {{ $v }}
+          {{- end }}
+            
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+{{- end }}

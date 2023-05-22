@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.services.backendApi.name | default "backend-api" }}
+  labels:
+    {{- include "image-viewer.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: {{ .Values.backend.apiDeployment.name | default "api-deployment" }}
+  ports:
+  - port: {{ .Values.services.backendApi.port }}
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  type: {{ .Values.services.backendApi.type | default "ClusterIP" }}

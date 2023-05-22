@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.backend.apiDeployment.name | default "api-deployment" }}
+  labels:
+    {{- include "image-viewer.labels" . | nindent 4 }}
+spec:
+  {{ if eq .Values.stackMode "standalone" }}
+  replicas: 1
+  {{ else }}
+  replicas: {{ .Values.backend.apiDeployment.replicaCount  | default 3 }}
+  {{ end }}
+  selector:
+    matchLabels:
+      app: {{ .Values.backend.apiDeployment.name | default "api-deployment" }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.backend.apiDeployment.name | default "api-deployment" }}
+    spec:
+      {{- with .Values.backend.apiDeployment.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "image-viewer.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          ports:
+            - containerPort: 5000
+          env:
+            - name: MODE
+              value: api
+            - name: DATA_BACKEND
+              value: {{ .Values.dataBackend }}
+            - name: STACK_MODE
+              value: {{ .Values.stackMode }}
+          {{- if eq .Values.dataBackend "mongodb" }}
+            - name: MONGODB_CONSTR
+              value: {{ .Values.backend.docDatabase.mongodbConnectionString | default "mongodb://data-backend:27017/" }}
+          {{- end }}
+          {{- if .Values.backend.messageBus.include }}
+            - name: RABBITMQ_HOST
+              value: {{ .Values.backend.messageBus.rabbitMqHost | default "message-bus" }}
+            - name: RABBITMQ_USERNAME
+              value: {{ .Values.backend.messageBus.rabbitMqUser | default "rabbitmq" }}
+            - name: RABBITMQ_PASSWORD
+              value: {{ .Values.backend.messageBus.rabbitMqPassword | default "rabbitmq" }}
+          {{- end }}
+
+          {{- range $k, $v := .Values.backend.apiDeployment.envs }}
+            - name: {{ $k }}
+              value: {{ $v }}
+          {{- end }}
+            
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

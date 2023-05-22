@@ -1,0 +1,18 @@
+{{- if and (.Values.backend.docDatabase.include) (eq .Values.stackMode "microservices") -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.services.docDatabase.name | default "data-backend" }}
+  labels:
+    {{- include "image-viewer.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: mongodb-ss
+  ports:
+  - port: {{ .Values.services.docDatabase.port }}
+    targetPort: 27017
+    protocol: TCP
+    name: http
+  type: {{ .Values.services.docDatabase.type | default "ClusterIP" }}
+
+{{- end }}
