@@ -5,10 +5,10 @@ metadata:
   labels:
     app: {{ .Values.services.guacamole.name | default "guacamole-services" }}
     {{- include "guacamole-stack.labels" . | nindent 4 }}
-    {{- with .Values.services.guacamole.annotations }}
-    annotations:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
+  {{- with .Values.services.guacamole.annotations }}
+  annotations:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
 spec:
   ports:
   - port: {{ .Values.services.guacamole.guacdPort | default 4822 }}
@@ -17,3 +17,4 @@ spec:
     name: webui
   selector:
     app: {{ .Values.statefulSets.guacamole.name | default "guacamole-app" }}
+  type: {{ .Values.services.guacamole.type | default "ClusterIP" }}

@@ -5,13 +5,14 @@ metadata:
   labels:
     app: {{ .Values.services.mysql.name | default "guacamole-mysql" }}
     {{- include "guacamole-stack.labels" . | nindent 4 }}
-    {{- with .Values.services.mysql.annotations }}
-    annotations:
-      {{- toYaml . | nindent 8 }}
-    {{- end }}
+  {{- with .Values.services.mysql.annotations }}
+  annotations:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
 spec:
   ports:
   - port: {{ .Values.services.mysql.port | default 3306 }}
     name: mysql
   selector:
     app: {{ .Values.statefulSets.mysql.name | default "guacamole-mysql" }}
+  type: {{ .Values.services.mysql.type | default "ClusterIP" }}

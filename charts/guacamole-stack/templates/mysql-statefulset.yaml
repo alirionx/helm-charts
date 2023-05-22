@@ -18,6 +18,10 @@ spec:
     metadata:
       labels:
         app: {{ .Values.statefulSets.mysql.name | default "guacamole-mysql" }}
+      {{- with .Values.services.mysql.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       terminationGracePeriodSeconds: 10
       

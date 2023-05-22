@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.statefulSets.guacamole.name | default "guacamole-app" }}
   labels:
     {{- include "guacamole-stack.labels" . | nindent 4 }}
-  {{- with .Values.statefulSets.mysql.annotations }}
+  {{- with .Values.statefulSets.guacamole.annotations }}
   annotations:
     {{- toYaml . | nindent 8 }}
   {{- end }}

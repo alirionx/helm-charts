@@ -1,0 +1,36 @@
+{{ if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.ingress.name | default "guacamole-ingress" }}
+  labels:
+    name: {{ .Values.ingress.name | default "guacamole-ingress" }}
+    {{- include "guacamole-stack.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}    
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.className | default "nginx" }}
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer | default "" }}
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+spec:
+  rules:
+  - host: {{.Values.ingress.hostname | default "guacamole-stack.local"}}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{.Values.services.guacamole.name | default "guacamole-services"}}
+            port:
+              number: {{.Values.services.guacamole.port | default 8080 }}
+  {{ if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{.Values.ingress.hostname | default "guacamole-stack.local"}}
+      secretName: {{ .Values.ingress.secretName | default "" }}
+  {{ end }}
+
+{{ end }}
