@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.statefulSets.guacamole.name | default "guacamole-app" }}
+  labels:
+    {{- include "guacamole-stack.labels" . | nindent 4 }}
+  {{- with .Values.statefulSets.mysql.annotations }}
+  annotations:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.statefulSets.guacamole.name | default "guacamole-app" }}
+  serviceName: {{ .Values.services.guacamole.name | default "guacamole-services" }}
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.statefulSets.guacamole.name | default "guacamole-app" }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: guacd-pod
+        image: guacamole/guacd:{{ .Values.guacamoleVersion }}
+        ports:
+          - name: guacd
+            containerPort: 4822
+            protocol: TCP
+    
+      - name: guacamole-pod
+        image: guacamole/guacamole:{{ .Values.guacamoleVersion }}
+        env:
+        - name: MYSQL_HOSTNAME
+          value: {{ .Values.services.mysql.name | default "guacamole-mysql" }}
+        - name: MYSQL_PORT
+          value: "{{ .Values.services.mysql.port | default 3306 }}"
+        - name: MYSQL_DATABASE
+          value: guacamole
+        - name: MYSQL_USER
+          value: {{ .Values.initialCreds.mysql.user | default "guacamole" }}
+        - name: MYSQL_PASSWORD
+          value: {{ .Values.initialCreds.mysql.password | default "guacamole" }}
+        - name: MYSQL_AUTO_CREATE_ACCOUNTS
+          value: "true"
+        - name: GUACD_HOSTNAME
+          value: {{ .Values.services.guacamole.name | default "guacamole-services" }}
+        - name: GUACD_PORT
+          value: "{{ .Values.services.guacamole.guacdPort | default 4822 }}"
+        ports:
+          - name: webui
+            containerPort: {{ .Values.services.guacamole.webuiPort | default 8080 }}
+            protocol: TCP

@@ -1,0 +1,4 @@
+1. Get the application URL by running these commands:
+kubectl port-forward service/{{ .Values.services.guacamole.name | default "guacamole-services" }} 8080:{{ .Values.services.guacamole.webuiPort | default 8080 }} -n {{ .Release.Namespace }}
+
+

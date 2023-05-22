@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: guacamole-services
+  labels:
+    app: {{ .Values.services.guacamole.name | default "guacamole-services" }}
+    {{- include "guacamole-stack.labels" . | nindent 4 }}
+    {{- with .Values.services.guacamole.annotations }}
+    annotations:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+spec:
+  ports:
+  - port: {{ .Values.services.guacamole.guacdPort | default 4822 }}
+    name: guacd
+  - port: {{ .Values.services.guacamole.webuiPort | default 8080 }}
+    name: webui
+  selector:
+    app: {{ .Values.statefulSets.guacamole.name | default "guacamole-app" }}

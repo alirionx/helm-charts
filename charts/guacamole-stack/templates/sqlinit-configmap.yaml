@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-sh
+  labels:
+    {{- include "guacamole-stack.labels" . | nindent 4 }}
+data:
+  guacamole_mysql_init.sh: |
+    #!/bin/ash
+    wget -O /guacamole-auth-jdbc-{{ .Values.guacamoleVersion }}.tar.gz http://archive.apache.org/dist/guacamole/{{ .Values.guacamoleVersion }}/binary/guacamole-auth-jdbc-{{ .Values.guacamoleVersion }}.tar.gz
+    tar xzfv /guacamole-auth-jdbc-{{ .Values.guacamoleVersion }}.tar.gz
+    cp /guacamole-auth-jdbc-{{ .Values.guacamoleVersion }}/mysql/schema/*.sql /workdir/
+  #!!!--->DOWNLOAD VIA HTTP NICHT VIA HTTPS<---!!!
+  # Die Container haben keinerlei known CA handler.. 

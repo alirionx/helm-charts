@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.statefulSets.mysql.name | default "guacamole-mysql" }}
+  labels:
+    {{- include "guacamole-stack.labels" . | nindent 4 }}
+  {{- with .Values.statefulSets.mysql.annotations }}
+  annotations:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.statefulSets.mysql.name | default "guacamole-mysql" }}
+  serviceName: {{ .Values.services.mysql.name | default "guacamole-mysql" }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.statefulSets.mysql.name | default "guacamole-mysql" }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      
+      initContainers:
+      - name: mysql-init
+        image: busybox:latest
+        command: ["/bin/ash", "/tmp/guacamole_mysql_init.sh"]
+        volumeMounts:
+        - name: workdir
+          mountPath: "/workdir"
+        - name: cm-vol
+          mountPath: "/tmp"
+          readOnly: true
+      
+      containers:
+      - name: guacamole-mysql
+        image: mysql:latest
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: {{ .Values.initialCreds.mysql.rootPassword | default "guacamole" }}
+        - name: MYSQL_USER
+          value: {{ .Values.initialCreds.mysql.user | default "guacamole" }}
+        - name: MYSQL_PASSWORD
+          value: {{ .Values.initialCreds.mysql.password | default "guacamole" }}
+          value: guacamole
+        - name: MYSQL_DATABASE
+          value: guacamole
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        - name: workdir
+          mountPath: "/docker-entrypoint-initdb.d"
+      
+      volumes:
+      - name: workdir
+        emptyDir: {}
+      - name: cm-vol
+        configMap:
+          name: mysql-init-sh
+
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-data
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      {{ if .Values.customStorageClass.enabled }}
+      storageClassName: {{ .Values.customStorageClass.name | default "" }}
+      {{ end }}
+      resources:
+        requests:
+          storage: {{ .Values.customStorageClass.size | default "1G" }}
