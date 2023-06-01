@@ -30,7 +30,7 @@ spec:
   tls:
     - hosts:
         - {{.Values.ingress.hostname | default "guacamole-stack.local"}}
-      secretName: {{ .Values.ingress.secretName | default "" }}
+      secretName: {{ .Values.ingress.tls.secretName | default "" }}
   {{ end }}
 
 {{ end }}
