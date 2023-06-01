@@ -57,11 +57,10 @@ ingress:
   enabled: false
   # name: guacamole-ingress
   className: ""
-  # clusterIssuer: ""
   hostname: guacamole-stack.local
   annotations: {}
   tls: 
-    enabled: no
+    enabled: false
     # secretName: chart-example-tls
 
 

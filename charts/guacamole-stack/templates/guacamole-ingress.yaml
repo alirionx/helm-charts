@@ -6,13 +6,12 @@ metadata:
   labels:
     name: {{ .Values.ingress.name | default "guacamole-ingress" }}
     {{- include "guacamole-stack.labels" . | nindent 4 }}   
+  {{- with .Values.ingress.annotations }}
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingress.className | default "nginx" }}
-    nginx.ingress.kubernetes.io/backend-protocol: HTTP
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    cert-manager.io/cluster-issuer: {{ .Values.ingress.clusterIssuer | default "" }}
-  {{- range $k, $v := .Values.ingress.annotations }} 
-    {{ $k }}:{{ $v }}
+    # kubernetes.io/ingress.class: {{ .Values.ingress.className | default "nginx" }}
+    # nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   rules:
