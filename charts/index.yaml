@@ -3,7 +3,17 @@ entries:
   guacamole-stack:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-01T17:31:16.04816+02:00"
+    created: "2023-06-01T17:51:02.3665347+02:00"
+    description: A Helm chart for Kubernetes
+    digest: 2ff7f3368362a5f14f59367650dc1ce25a1bb5fee892974f0776f6113de8bf94
+    name: guacamole-stack
+    type: application
+    urls:
+    - guacamole-stack-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-06-01T17:51:02.3659872+02:00"
     description: A Helm chart for Kubernetes
     digest: 61e54bcf6a464ce38e176584ff2a4a94f91089c3d79a0b3ef4564c5bd95b0b66
     name: guacamole-stack
@@ -13,7 +23,7 @@ entries:
     version: 0.1.5
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-01T17:31:16.04816+02:00"
+    created: "2023-06-01T17:51:02.3654838+02:00"
     description: A Helm chart for Kubernetes
     digest: 7ef58228ee725da5041bc195587eb323e761c89a216e67502b59336d86de88b2
     name: guacamole-stack
@@ -23,7 +33,7 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-01T17:31:16.0475651+02:00"
+    created: "2023-06-01T17:51:02.3627085+02:00"
     description: A Helm chart for Kubernetes
     digest: 261c62d2674a7140e4ec6c66fd62513992c084fb5da5ec3aa805fe49f1092a3c
     name: guacamole-stack
@@ -33,7 +43,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-01T17:31:16.0470615+02:00"
+    created: "2023-06-01T17:51:02.3594408+02:00"
     description: A Helm chart for Kubernetes
     digest: c5a044f29eb86cd265e17f39582123edcfddcd11d2d3e1a718a8c4148992a67e
     name: guacamole-stack
@@ -43,7 +53,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-01T17:31:16.046494+02:00"
+    created: "2023-06-01T17:51:02.3560851+02:00"
     description: A Helm chart for Kubernetes
     digest: 7d656be53833d737f58ac5c7b0e8f3be5311450f52287bbfc1d30e464dbbc7c4
     name: guacamole-stack
@@ -53,7 +63,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-01T17:31:16.046494+02:00"
+    created: "2023-06-01T17:51:02.3527636+02:00"
     description: A Helm chart for Kubernetes
     digest: e7cc7d2db945e27f5ee1015e09e4b61eac7c39b010bda9dfeba52ba73d10c0be
     name: guacamole-stack
@@ -64,7 +74,7 @@ entries:
   image-viewer:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-01T17:31:16.0492076+02:00"
+    created: "2023-06-01T17:51:02.3727961+02:00"
     description: Helm Chart 4 Image Viewer Demo App
     digest: f662410533accfb41924a371117d8d609ca2bb7939578ac7f7bf34048579396d
     name: image-viewer
@@ -74,7 +84,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-01T17:31:16.0486631+02:00"
+    created: "2023-06-01T17:51:02.3697077+02:00"
     description: Helm Chart 4 Image Viewer Demo App
     digest: 4ccdded477852cf35d89d5a279a074eec4d110274262d395aec7ea8dc2f4345d
     name: image-viewer
@@ -82,4 +92,4 @@ entries:
     urls:
     - image-viewer-0.1.1.tgz
     version: 0.1.1
-generated: "2023-06-01T17:31:16.0459289+02:00"
+generated: "2023-06-01T17:51:02.3489255+02:00"
