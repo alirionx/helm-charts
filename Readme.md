@@ -2,7 +2,7 @@
 !!! This is a playground / sandbox repo !!!
 
 
-### Some HELM thongs for me to remenber
+### Some HELM things for me to remenber
 
 ```
 $ helm create my-app
