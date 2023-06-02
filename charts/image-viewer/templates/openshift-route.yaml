@@ -1,0 +1,19 @@
+{{- if .Values.openshiftRoute.enabled -}}
+
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{.Values.openshiftRoute.name | default "image-viewer-route" }}
+  annotations:
+    haproxy.router.openshift.io/balance: leastconn
+  labels: 
+    {{- include "image-viewer.labels" . | nindent 4 }}
+spec:
+  to:
+    kind: Service
+    name: {{ .Values.services.backendApi.name | default "backend-api" }}
+  tls: null
+  port:
+    targetPort: {{ .Values.services.backendApi.port }}
+
+{{- end }}

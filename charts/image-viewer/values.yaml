@@ -4,7 +4,7 @@
 
 
 image:
-  repository: alirionx/image-viewer
+  repository: ghcr.io/alirionx/image-viewer-stack:latest
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -109,6 +109,7 @@ ingress:
   hostname: image-viewer.local
   annotations: 
     # kubernetes.io/ingress.class: nginx
+    # cert-manager.io/cluster-issuer: my-issuer
     # kubernetes.io/tls-acme: "true"
     # nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
     nginx.ingress.kubernetes.io/proxy-body-size: "512m"
@@ -116,6 +117,10 @@ ingress:
     enabled: no
     # secretName: chart-example-tls
 
+openshiftRoute:
+  # name: "image-viewer-route"
+  enabled: false
+  hostname: image-viewer.local
 
 resources: {}
   # limits:
