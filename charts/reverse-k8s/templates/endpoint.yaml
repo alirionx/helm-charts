@@ -1,0 +1,12 @@
+{{- range $ep := .Values.reverseEndpoints }}
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: {{ $.Values.resourcePrefix }}{{ $ep.name }}
+subsets:
+  - addresses:
+      - ip: {{ $ep.ip }}
+    ports: 
+      - port: {{ $ep.port }}
+---
+{{- end }}

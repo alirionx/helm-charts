@@ -1,0 +1,14 @@
+
+{{- range $ep := .Values.reverseEndpoints }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Values.resourcePrefix }}{{ $ep.name }}
+spec:
+  ports:
+    - protocol: TCP
+      port: {{ $ep.port }}
+      targetPort: {{ $ep.port }}
+---
+{{- end }}
+

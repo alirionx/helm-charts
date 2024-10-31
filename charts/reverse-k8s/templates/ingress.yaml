@@ -1,0 +1,30 @@
+{{- range $ep := .Values.reverseEndpoints }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $.Values.resourcePrefix }}{{ $ep.name }}
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: {{ upper $ep.backendProtocol }}
+    cert-manager.io/cluster-issuer: {{ $.Values.clusterIssuer }}
+{{- if $ep.customUploadLimit }}
+    nginx.ingress.kubernetes.io/proxy-body-size: {{ $ep.customUploadLimit }}
+{{- end }}
+spec:
+  ingressClassName: {{ $.Values.ingressClass | default "nginx" }}
+  rules:
+  - host: {{ $ep.hostname }}
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: {{ $.Values.resourcePrefix }}{{ $ep.name }}
+            port: 
+              number: {{ $ep.port }}
+  tls:
+  - hosts:
+    - {{ $ep.hostname }}
+    secretName: {{ $.Values.resourcePrefix }}{{ $ep.name }}-tls
+---
+{{- end }}

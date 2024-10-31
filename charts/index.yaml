@@ -3,7 +3,7 @@ entries:
   guacamole-stack:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-03T01:57:04.3147419+02:00"
+    created: "2024-10-31T22:28:54.777436722+01:00"
     description: A Helm chart for Kubernetes
     digest: 1cb29ecc7d39faa90340b8c41028792f32ca4f6b2e06e630857b59fb750ff3c7
     name: guacamole-stack
@@ -14,7 +14,7 @@ entries:
   image-viewer:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-03T01:57:04.3147419+02:00"
+    created: "2024-10-31T22:28:54.777727304+01:00"
     description: Helm Chart 4 Image Viewer Demo App
     digest: 9102ef1741b07d2f268f8576555f732edf31a7185540a1a20e18a184dcec9796
     name: image-viewer
@@ -22,4 +22,15 @@ entries:
     urls:
     - image-viewer-0.1.2.tgz
     version: 0.1.2
-generated: "2023-06-03T01:57:04.3142381+02:00"
+  reverse-k8s:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-10-31T22:28:54.77785768+01:00"
+    description: A Helm chart for using K8S as general reverse proxy incl. cert-manager
+    digest: ca56962959161c79f3b7393e792540d6ed8eb4dea92cb9f05c6a6e67437b3129
+    name: reverse-k8s
+    type: application
+    urls:
+    - reverse-k8s-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-10-31T22:28:54.777120789+01:00"

@@ -1,0 +1,5 @@
+The following rules are implemented successfully
+{{- range $ep := .Values.reverseEndpoints }}
+Rule:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

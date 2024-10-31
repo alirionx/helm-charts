@@ -1,0 +1,20 @@
+# Name of the cert-manager-cluster-issuer
+# Info: https://cert-manager.io/docs/concepts/issuer/ 
+clusterIssuer: ""
+
+# Name if the ingress class (e.g. nginx)
+ingressClass: "nginx"
+
+resourcePrefix: "reverse-"
+
+reverseEndpoints: []
+  # - name: my-webserver
+  #   hostname: my-webserver.my-domain.io
+  #   ip: "192.168.1.2"
+  #   port: 8080
+  #   backendProtocol: http
+  #   customUploadLimit: 4096m
+
+
+
+
