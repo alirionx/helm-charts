@@ -5,7 +5,7 @@
 nameOverride: ""
 fullnameOverride: ""
 
-guacamoleVersion: 1.4.0
+guacamoleVersion: 1.5.5
 
 customStorageClass: 
   enabled: false
@@ -55,13 +55,15 @@ statefulSets:
 
 ingress:
   enabled: false
+  className: nginx
   # name: guacamole-ingress
   hostname: guacamole-stack.local
   annotations: {}
   # annotations: 
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+    # cert-manager.io/cluster-issuer: <YOUR_ISSUER>
     # nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    # nginx.ingress.kubernetes.io/proxy-body-size: 8m
 
   tls: 
     enabled: false
