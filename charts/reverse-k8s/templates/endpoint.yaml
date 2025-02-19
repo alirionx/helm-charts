@@ -5,7 +5,9 @@ metadata:
   name: {{ $.Values.resourcePrefix }}{{ $ep.name }}
 subsets:
   - addresses:
-      - ip: {{ $ep.ip }}
+{{- range $ip := $ep.ips }}
+      - ip: {{ $ip }}
+{{- end }}
     ports: 
       - port: {{ $ep.port }}
 ---
